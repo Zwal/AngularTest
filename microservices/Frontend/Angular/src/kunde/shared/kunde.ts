@@ -38,11 +38,6 @@ export interface Adresse {
     ort: string
 }
 
-export interface Umsatz {
-        betrag: number,
-        waehrung: string
-}
-
 export interface User {
     username: string,
     password: string
@@ -50,10 +45,10 @@ export interface User {
 export interface KundeShared {
     _id?: string|undefined
     nachname?: string|undefined
+    vorname?: string|undefined
     email: string|undefined
     newsletter: boolean|undefined
     geburtsdatum: Date|undefined
-    umsatz: Umsatz
     geschlecht?: Geschlecht|undefined
     familienstand: familienstandArt|undefined
     adresse: Adresse|undefined
@@ -85,10 +80,9 @@ export interface KundeServer extends KundeShared {
  * </ul>
  */
 export interface KundeForm extends KundeShared {
-    betrag: number
-    waehrung: string
     plz: string
     ort: string
+    strasse: string
     kategorie: number|undefined
     username: string
     password: string
@@ -109,11 +103,11 @@ export class Kunde {
             public _id: string|undefined,
             public links: Array<any>|undefined,
             public nachname: string|undefined,
+            public vorname: string|undefined,
             public email: string|undefined,
             public kategorie: number|undefined,
             public newsletter: boolean|undefined,
             public geburtsdatum: Date|undefined,
-            public umsatz: Umsatz,
             public homepage: string|undefined,
             public geschlecht: Geschlecht|undefined,
             public familienstand: familienstandArt|undefined,
@@ -124,11 +118,11 @@ export class Kunde {
             // this._id = _id || undefined
             this.links = links || undefined
             this.nachname = nachname || undefined
+            this.vorname = vorname || undefined
             this.email = email || undefined
             this.kategorie = kategorie || undefined
             this.newsletter = newsletter || undefined
             this.geburtsdatum = geburtsdatum || undefined
-            this.umsatz = umsatz
             this.homepage = homepage || undefined
             this.geschlecht = geschlecht || undefined
             this.familienstand = familienstand || undefined
@@ -165,8 +159,8 @@ export class Kunde {
         console.error(`ID aus dem Limk im fromServer ${idString}`)
         console.error(`ID im fromServer ${kundeServer._id}`)
         const kunde = new Kunde(
-            kundeServer._id, kundeServer.links, kundeServer.nachname, kundeServer.email, kundeServer.kategorie,
-            kundeServer.newsletter, kundeServer.geburtsdatum, kundeServer.umsatz,
+            kundeServer._id, kundeServer.links, kundeServer.nachname, kundeServer.vorname, kundeServer.email,
+            kundeServer.kategorie, kundeServer.newsletter, kundeServer.geburtsdatum,
             kundeServer.homepage, kundeServer.geschlecht, kundeServer.familienstand,
             kundeServer.interessen, kundeServer.adresse, kundeServer.user, kundeServer.username)
         console.log('Kunde.fromServer(): kunde=', kunde)
@@ -190,16 +184,14 @@ export class Kunde {
             interessen.push('R')
         }
 
-        const umsatz: Umsatz = { betrag: kundeForm.betrag, waehrung: kundeForm.waehrung }
         const user: User = {username: kundeForm.username, password: kundeForm.password}
         const adresse: Adresse = { plz: kundeForm.plz, ort: kundeForm.ort }
 
 //        const rabatt = kundeForm.rabatt === undefined ? 0 : kundeForm.rabatt / 100
         const kunde = new Kunde(
-            kundeForm._id, kundeForm.links, kundeForm.nachname, kundeForm.email, kundeForm.kategorie,
-            kundeForm.newsletter,
-            kundeForm.geburtsdatum, umsatz, kundeForm.homepage,
-            kundeForm.geschlecht, kundeForm.familienstand, interessen, adresse, user, kundeForm.username)
+            kundeForm._id, kundeForm.links, kundeForm.nachname, kundeForm.vorname, kundeForm.email, kundeForm.kategorie,
+            kundeForm.newsletter, kundeForm.geburtsdatum, kundeForm.homepage, kundeForm.geschlecht,
+            kundeForm.familienstand, interessen, adresse, user, kundeForm.username)
         console.log('Kunde.fromForm(): kunde=', kunde)
         return kunde
     }
@@ -250,18 +242,18 @@ export class Kunde {
     /**
      * Aktualisierung der Stammdaten des Kunde-Objekts.
      * @param nachname Der neue Nachname
+     * @param vorname Der neue Nachname
      * @param umsatz Der neue Umsatz
      * @param familienstand Der neue Familienstand (L, VH, G oder VW)
      * @param geschlecht Das neue Geschlecht
      */
     updateStammdaten(
-        nachname: string, familienstand: familienstandArt, geschlecht: Geschlecht, betrag: number,
-        waehrung: string) {
+        nachname: string, vorname: string, familienstand: familienstandArt, geschlecht: Geschlecht,
+        betrag: number) {
         this.nachname = nachname
+        this.vorname = vorname
         this.familienstand = familienstand
         this.geschlecht = geschlecht
-        this.umsatz.betrag = betrag
-        this.umsatz.waehrung = waehrung
         // this.umsatzArray = []
         // _.times(umsatz.betrag - MIN_RATING, () => this.umsatzArray.push(true))
     }
@@ -321,11 +313,11 @@ export class Kunde {
             _id: this._id,
             links: this.links,
             nachname: this.nachname,
+            vorname: this.vorname,
             email: this.email,
             kategorie: this.kategorie,
             newsletter: this.newsletter,
             geburtsdatum: this.geburtsdatum,
-            umsatz: this.umsatz,
             homepage: this.homepage,
             geschlecht: this.geschlecht,
             familienstand: this.familienstand,

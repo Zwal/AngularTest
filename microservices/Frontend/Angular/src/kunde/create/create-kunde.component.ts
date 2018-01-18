@@ -46,13 +46,11 @@ export default class CreateKundeComponent implements OnInit {
     //    clientseitig bei den Ereignissen keyup, change, ...
     // Ein Endbenutzer bewirkt staendig einen neuen Fehlerstatus
     readonly nachname: FormControl = new FormControl(undefined, [Validators.required] as any)
+    readonly vorname: FormControl = new FormControl(undefined, [Validators.required] as any)
     readonly email: FormControl =
         new FormControl(undefined, [Validators.required, emailValidator] as any)
     readonly newsletter: FormControl = new FormControl(false)
     readonly geburtsdatum: FormControl = new FormControl (undefined)
-    readonly umsatz: FormControl = new FormControl(undefined)
-    readonly betrag: FormControl = new FormControl(0)
-    readonly waehrung: FormControl = new FormControl('EUR')
     readonly geschlecht: FormControl = new FormControl(undefined)
     readonly familienstand: FormControl = new FormControl('L')
     readonly L: FormControl = new FormControl(false)
@@ -60,6 +58,7 @@ export default class CreateKundeComponent implements OnInit {
     readonly R: FormControl = new FormControl(false)
     readonly plz: FormControl = new FormControl(undefined)
     readonly ort: FormControl = new FormControl(undefined)
+    readonly strasse: FormControl = new FormControl(undefined)
     readonly username: FormControl = new FormControl(undefined)
     readonly password: FormControl = new FormControl(undefined)
     readonly user: FormControl = new FormControl(undefined)
@@ -85,16 +84,15 @@ export default class CreateKundeComponent implements OnInit {
         this.form = this.formBuilder.group({
             // siehe formControlName innerhalb @Component({template: ...})
             nachname: this.nachname,
+            vorname: this.vorname,
             email: this.email,
             newsletter: this.newsletter,
             geburtsdatum: this.geburtsdatum,
-            umsatz: this.umsatz,
-            waehrung: this.waehrung,
-            betrag: this.betrag,
             geschlecht: this.geschlecht,
             familienstand: this.familienstand,
             plz: this.plz,
             ort: this.ort,
+            strasse: this.strasse,
             username: this.username,
             adresse: this.adresse,
             S: this.S,
