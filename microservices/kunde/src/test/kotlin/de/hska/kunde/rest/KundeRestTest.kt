@@ -285,8 +285,7 @@ internal class KundeRestTest (@LocalServerPort private val port: Int) {
             fun `Abspeichern eines neuen Kunden`() {
                 // Given
                 val homepage = URL(NEUE_HOMEPAGE)
-                val umsatz = Umsatz(betrag = ONE, waehrung = NEUE_WAEHRUNG)
-                val adresse = Adresse(plz = NEUE_PLZ, ort = NEUER_ORT)
+                val adresse = Adresse(plz = NEUE_PLZ, ort = NEUER_ORT, strasse = NEUE_STRASSE)
                 val user = SimpleUser(
                         id = null,
                         username = NEUER_USERNAME,
@@ -331,7 +330,7 @@ internal class KundeRestTest (@LocalServerPort private val port: Int) {
             @Test
             fun `Abspeichern eines neuen Kunden mit ungueltigen Werten`() {
                 // Given
-                val adresse = Adresse(plz = NEUE_PLZ_INVALID, ort = NEUER_ORT)
+                val adresse = Adresse(plz = NEUE_PLZ_INVALID, ort = NEUER_ORT, strasse = NEUE_STRASSE)
                 val neuerKunde = Kunde(
                         id = null,
                         nachname = NEUER_NACHNAME_INVALID,
@@ -567,6 +566,7 @@ internal class KundeRestTest (@LocalServerPort private val port: Int) {
         val NEUE_PLZ = "12345"
         val NEUE_PLZ_INVALID = "1234"
         val NEUER_ORT = "Testort"
+        val NEUE_STRASSE = "Teststr. 2"
         val NEUER_NACHNAME = "Neuernachname"
         val NEUER_NACHNAME_INVALID = "?!$"
         val NEUE_EMAIL = "email@test.de"

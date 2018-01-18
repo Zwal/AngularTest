@@ -29,7 +29,7 @@ internal data class Adresse (
     val plz: String,
 
     @get:NotEmpty(message = "{adresse.ort.notEmpty}")
-    val ort: String)
+    val ort: String,
 	
 	@get:NotEmpty(message = "{adresse.strasse.notEmpty}")
-    val ort: String)
+    val adresse: String)

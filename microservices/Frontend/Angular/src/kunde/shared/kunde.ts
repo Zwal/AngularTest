@@ -36,6 +36,7 @@ export declare type familienstandArt = 'L' | 'VH' | 'G' | 'VW'
 export interface Adresse {
     plz: string,
     ort: string
+    strasse: string
 }
 
 export interface User {
@@ -159,7 +160,7 @@ export class Kunde {
         console.error(`ID aus dem Limk im fromServer ${idString}`)
         console.error(`ID im fromServer ${kundeServer._id}`)
         const kunde = new Kunde(
-            kundeServer._id, kundeServer.links, kundeServer.nachname, kundeServer.vorname, kundeServer.email,
+            kundeServer._id, kundeServer.links, kundeServer.nachname, kundeServer.nachname, kundeServer.email,
             kundeServer.kategorie, kundeServer.newsletter, kundeServer.geburtsdatum,
             kundeServer.homepage, kundeServer.geschlecht, kundeServer.familienstand,
             kundeServer.interessen, kundeServer.adresse, kundeServer.user, kundeServer.username)
@@ -185,7 +186,7 @@ export class Kunde {
         }
 
         const user: User = {username: kundeForm.username, password: kundeForm.password}
-        const adresse: Adresse = { plz: kundeForm.plz, ort: kundeForm.ort }
+        const adresse: Adresse = { plz: kundeForm.plz, ort: kundeForm.ort, strasse: kundeForm.strasse }
 
 //        const rabatt = kundeForm.rabatt === undefined ? 0 : kundeForm.rabatt / 100
         const kunde = new Kunde(
