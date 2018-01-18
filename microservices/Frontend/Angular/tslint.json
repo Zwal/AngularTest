@@ -38,7 +38,6 @@
 		"arrow-parens": [false],
 		"ban-comma-operator": true,
 	    "interface-name": [false],
-		"linebreak-style": [true, "CRLF"],
 		"max-file-line-count": [true, 300],
 		"member-access": [true, "no-public"],
 	    "member-ordering": [true,
