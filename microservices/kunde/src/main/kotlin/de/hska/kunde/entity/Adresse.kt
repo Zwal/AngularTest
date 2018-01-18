@@ -30,3 +30,6 @@ internal data class Adresse (
 
     @get:NotEmpty(message = "{adresse.ort.notEmpty}")
     val ort: String)
+	
+	@get:NotEmpty(message = "{adresse.strasse.notEmpty}")
+    val ort: String)

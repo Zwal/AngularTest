@@ -43,7 +43,7 @@ import org.springframework.data.mongodb.core.mapping.Document
  */
 @Document
 @JsonPropertyOrder(
-        "nachname", "email", "kategorie", "newsletter", "geburtsdatum",
+        "nachname", "vorname", "email", "kategorie", "newsletter", "geburtsdatum",
         "umsatz", "homepage", "geschlecht", "familienstand", "interessen",
         "adresse", "user")
 internal data class Kunde (
@@ -57,6 +57,13 @@ internal data class Kunde (
         message = "{kunde.nachname.pattern}")
     @Indexed
     val nachname: String,
+	
+	@get:NotEmpty(message = "{kunde.vorname.notEmpty}")
+    @get:Pattern(
+        regexp = VORNAME_PATTERN,
+        message = "{kunde.vorname.pattern}")
+    @Indexed
+    val vorname: String,
 
     @get:NotEmpty(message = "{kunde.email.notEmpty}")
     @get:Email(message = "{kunde.email.pattern}")
@@ -136,6 +143,9 @@ internal data class Kunde (
         private const val NACHNAME_PREFIX = "o'|von|von der|von und zu|van"
         private const val NAME_PATTERN = "[A-ZÄÖÜ][a-zäöüß]+"
         const val NACHNAME_PATTERN =
+                "($NACHNAME_PREFIX)?$NAME_PATTERN(-$NAME_PATTERN)?"
+				
+		const val VORNAME_PATTERN =
                 "($NACHNAME_PREFIX)?$NAME_PATTERN(-$NAME_PATTERN)?"
 
         const val MIN_KATEGORIE = 0L

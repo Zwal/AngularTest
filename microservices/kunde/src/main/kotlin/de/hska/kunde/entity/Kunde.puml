@@ -10,7 +10,6 @@ package de.hska.kunde {
     }
     package entity #DDDDDD {
         Auditable <|-- Kunde
-        Kunde *-down-> "1" Umsatz
         Kunde *-down-> "1" Adresse
         Kunde *-down-> "1" GeschlechtType
         Kunde *-down-> "1" FamilienstandType
@@ -22,11 +21,6 @@ package de.hska.kunde {
             - @CreatedDate erzeugt: LocalDateTime
             - @LastModifiedDate aktualisiert: LocalDateTime
             # Auditable()
-        }
-
-        class Umsatz {
-            - betrag: BigDecimal
-            - waehrung: Currency
         }
 
         class Adresse {
@@ -55,6 +49,7 @@ package de.hska.kunde {
         class Kunde << entity >> << @Document >> {
             - @Id @GeneratedValue id : String
             - @NotNull @Pattern @Indexed nachname : String
+			- @NotNull @Pattern @Indexed vorname : String
             - @NotNull @Email @Indexed email : String
             - kategorie: int
             - newsletter : boolean
