@@ -1,8 +1,0 @@
-{
-    "curly": true,
-    "eqeqeq": true,
-    "esversion": 6,
-    "undef": true,
-    "unused": true,
-    "asi": true
-}
