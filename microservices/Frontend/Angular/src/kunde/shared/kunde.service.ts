@@ -405,9 +405,8 @@ export class KundeService {
         if (suchkriterien.nachname !== undefined && suchkriterien.nachname !== '') {
             httpParams = httpParams.set('nachname', suchkriterien.nachname as string)
         }
-        if (suchkriterien.familienstand !== undefined) {
-            const value = suchkriterien.familienstand as string
-            httpParams = httpParams.set('familienstand', value)
+        if (suchkriterien.ort !== undefined && suchkriterien.ort !== '') {
+            httpParams = httpParams.set('ort', suchkriterien.ort as string)
         }
         if (suchkriterien.geschlecht !== undefined && suchkriterien.geschlecht) {
             const value = suchkriterien.geschlecht as string

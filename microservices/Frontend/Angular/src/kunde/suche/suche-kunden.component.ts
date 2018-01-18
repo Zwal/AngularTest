@@ -44,7 +44,7 @@ export default class SucheKundenComponent implements OnInit {
 
     @log
     ngOnInit() {
-        this.titleService.setTitle('Suche')
+        this.titleService.setTitle('Kundensuche')
     }
 
     /**
