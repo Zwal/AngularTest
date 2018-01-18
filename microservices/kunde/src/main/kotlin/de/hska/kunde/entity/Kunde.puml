@@ -1,0 +1,74 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam componentStyle uml2
+' skinparam monochrome true
+
+package de.hska.kunde {
+    package config.security {
+        class SimpleUser {
+        }
+    }
+    package entity #DDDDDD {
+        Auditable <|-- Kunde
+        Kunde *-down-> "1" Umsatz
+        Kunde *-down-> "1" Adresse
+        Kunde *-down-> "1" GeschlechtType
+        Kunde *-down-> "1" FamilienstandType
+        Kunde *-down-> "*" InteresseType
+        Kunde *-down-> "1" SimpleUser
+
+        class Auditable {
+            - @Version version: long
+            - @CreatedDate erzeugt: LocalDateTime
+            - @LastModifiedDate aktualisiert: LocalDateTime
+            # Auditable()
+        }
+
+        class Umsatz {
+            - betrag: BigDecimal
+            - waehrung: Currency
+        }
+
+        class Adresse {
+            - @NotNull @Pattern plz: String
+            - @NotNull ort: String
+        }
+
+        enum GeschlechtType {
+            MAENNLICH
+            WEIBLICH
+        }
+
+        enum FamilienstandType {
+            LEDIG
+            VERHEIRATET
+            GESCHIEDEN
+            VERWITWET
+        }
+
+        enum InteresseType {
+            SPORT
+            LESEN
+            REISEN
+        }
+
+        class Kunde << entity >> << @Document >> {
+            - @Id @GeneratedValue id : String
+            - @NotNull @Pattern @Indexed nachname : String
+            - @NotNull @Email @Indexed email : String
+            - kategorie: int
+            - newsletter : boolean
+            - geburtsdatum: LocalDate
+            - homepage: URL
+            - @Indexed username: String
+        }
+    }
+}
+
+hide empty members
+hide empty methods
+hide empty fields
+
+footer (c) Juergen Zimmermann
+
+@enduml

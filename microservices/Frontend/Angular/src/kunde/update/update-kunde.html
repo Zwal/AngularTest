@@ -1,0 +1,47 @@
+<!--
+   Copyright (C) 2015 - 2017 Juergen Zimmermann, Hochschule Karlsruhe
+
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<section *ngIf="kunde !== null">
+    <h4>Kunde {{kunde._id}}:</h4>
+
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" href="#stammdaten" data-toggle="tab">
+                Stammdaten
+            </a>
+        </li>
+        <li class="nav-item" *ngIf="kunde.interessen.length !== 0">
+            <a class="nav-link" href="#interessen" data-toggle="tab">
+                Interessen
+            </a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="stammdaten">
+            <div class="mt-1">
+                <hs-update-stammdaten [kunde]="kunde">
+                </hs-update-stammdaten>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="interessen">
+            <div class="mt-1">
+                <hs-update-interessen [kunde]="kunde">
+                </hs-update-interessen>
+            </div>
+        </div>
+    </div>
+</section>

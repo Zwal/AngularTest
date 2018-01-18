@@ -1,0 +1,10 @@
+build
+.gradle
+.nb-gradle
+gradle.properties
+MANIFEST.MF
+src/querydsl
+src/main/java/**/*_.java
+*.iml 
+*.ipr 
+*.iws 

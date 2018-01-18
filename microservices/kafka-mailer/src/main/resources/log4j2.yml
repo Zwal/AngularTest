@@ -1,0 +1,63 @@
+# Copyright (C) 2017 Juergen Zimmermann, Hochschule Karlsruhe
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# https://logging.apache.org/log4j/2.x/manual/configuration.html
+Configutation:
+    status: warn
+
+    Appenders:
+        Console:
+            name: CONSOLE
+            target: SYSTEM_OUT
+            # https://logging.apache.org/log4j/2.x/manual/layouts.html
+            PatternLayout:
+                Pattern: "%date{HH:mm:ss.SSS} %highlight{%-5level} [%logger{1.}] [%thread] %message%n"
+        # https://logging.apache.org/log4j/2.x/manual/appenders.html#RollingFileAppender
+        RollingFile:
+            -   name: FILE
+                fileName: ./build/logs/kafka-mailer.log
+                filePattern: "./build/logs/kafka-mailer-%date{yyyy-MM-dd}-%i.log.gz"
+                PatternLayout:
+                    Pattern: "%date{HH:mm:ss.SSS} %-5level [%logger{1.}] [%thread] %message%n"
+                policies:
+                    TimeBasedTriggeringPolicy:
+                        interval: 1
+                        modulate: true
+                    SizeBasedTriggeringPolicy:
+                        size: "2 MB"
+                DefaultRolloverStrategy:
+                    max: 2
+
+    Loggers:
+        Root:
+            level: info
+            AppenderRef:
+                -   ref: CONSOLE
+                -   ref: FILE
+        Logger:
+            -   name: de.hska
+                additivity: false
+                level: all
+                AppenderRef:
+                    -   ref: CONSOLE
+                        level: all
+                    -   ref: FILE
+            -   name: org.apache.kafka
+                additivity: false
+                level: error
+                AppenderRef:
+                    -   ref: CONSOLE
+                        level: error
+                    -   ref: FILE

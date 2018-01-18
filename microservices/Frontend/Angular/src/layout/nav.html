@@ -1,0 +1,60 @@
+<!--
+   Copyright (C) 2015 - 2017 Juergen Zimmermann, Hochschule Karlsruhe
+
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<!-- Internationalisierung durch z.B. https://github.com/ocombe/ng2-translate -->
+
+<ul class="navbar-nav mr-auto">
+    <li class="nav-item active">
+        <a routerLink="/suche" class="nav-link">
+            <i class="fa fa-search"></i>
+            <span class="ml-1">Suche</span>
+        </a>
+    </li>
+
+    <li class="nav-item" *ngIf="isAdmin">
+        <a routerLink="/create" class="nav-link">
+            <i class="fa fa-book"></i>
+            <span class="ml-1">Neuer Kunde</span>
+        </a>
+    </li>
+
+    <li class="nav-item dropdown" *ngIf="isAdmin">
+        <div class="nav-link dropdown-toggle"
+            id="navbarDropdownMenuLink"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false">
+            <i class="fa fa-bar-chart"></i>
+            <span class="ml-1">Diagramme</span>
+        </div>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a routerLink="/balkendiagramm" class="dropdown-item">
+                <i class="fa fa-bar-chart"></i>
+                <span class="ml-1">Balkendiagramm</span>
+            </a>
+            <a routerLink="/liniendiagramm" class="dropdown-item">
+                <i class="fa fa-line-chart"></i>
+                <span class="ml-1">Liniendiagramm</span>
+            </a>
+            <a routerLink="/tortendiagramm" class="dropdown-item">
+                <i class="fa fa-pie-chart"></i>
+                <span class="ml-1">Tortendiagramm</span>
+            </a>
+        </div>
+    </li>
+</ul>
+<hs-auth></hs-auth>

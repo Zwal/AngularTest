@@ -1,0 +1,17 @@
+# Abhaengige Dateien durch npm
+node_modules
+
+# Uebersetzte oder generierte Dateien
+dist
+doc
+reports
+tests_output
+
+# IDEs und Editoren
+.idea
+.sonarlint
+.vscode
+
+# System Dateien
+.DS_Store
+Thumbs.db

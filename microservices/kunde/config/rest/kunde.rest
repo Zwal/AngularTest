@@ -1,0 +1,249 @@
+### Suche alle Kunden
+https://localhost:8444
+Authorization: Basic YWRtaW46cA
+ALPN: h2
+# ALPN: h2, http%2F1.1
+
+### Suche mit vorhandener Kunde-ID
+https://localhost:8444/00000000-0000-0000-0000-000000000001
+Authorization: Basic YWRtaW46cA
+ALPN: h2
+
+### Suche mit ungueltiger Kunde-ID
+https://localhost:8444/YYYYYYYY-YYYY-YYYY-YYYY-YYYYYYYYYYYY
+Authorization: Basic YWRtaW46cA
+ALPN: h2
+
+### Suche mit nicht-vorhandener Kunde-ID
+https://localhost:8444/99999999-9999-9999-9999-999999999999
+Authorization: Basic YWRtaW46cA
+ALPN: h2
+
+### Suche mit falschem Passwort
+https://localhost:8444/00000000-0000-0000-0000-000000000001
+Authorization: Basic YWRtaW46IT86
+ALPN: h2
+
+### Suche mit vorhandener Kunde-ID und ETag
+https://localhost:8444/00000000-0000-0000-0000-000000000001
+If-None-Match: 0
+Authorization: Basic YWRtaW46cA
+ALPN: h2
+
+### Suche mit vorhandenem Nachnamen
+https://localhost:8444/?nachname=delta
+Authorization: Basic YWRtaW46cA
+ALPN: h2
+
+### Suche mit vorhandener Email
+https://localhost:8444/?email=alpha%40hska.edu
+Authorization: Basic YWRtaW46cA
+ALPN: h2
+
+### Streaming mit allen Kunden
+#https://localhost:8444
+#Accept: application/text/event-stream
+#Authorization: Basic YWRtaW46cA
+#ALPN: h2
+
+### Einen neuen Kunden anlegen
+POST https://localhost:8444
+Content-Type: application/json
+ALPN: h2
+
+{
+    "nachname": "Test",
+    "email": "Theo@Test.de",
+    "kategorie" : 1,
+    "newsletter": true,
+    "geburtsdatum": [
+        1918,
+        1,
+        31
+    ],
+    "umsatz": {
+        "betrag": 0,
+        "waehrung": "EUR"
+    },
+    "homepage": "https://www.test.de",
+    "geschlecht": "W",
+    "familienstand": "L",
+    "interessen": [
+        "R",
+        "L"
+    ],
+    "adresse": {
+        "plz": "12345",
+        "ort": "Testort"
+    },
+    "user": {
+        "username": "test",
+        "password": "p"
+    }
+}
+
+### Einen neuen Kunden mit ungueltigen Daten versuchen anzulegen
+POST https://localhost:8444
+Content-Type: application/json
+ALPN: h2
+
+{
+    "nachname": "Test2",
+    "email": "?!$",
+    "kategorie" : 11,
+    "newsletter": true,
+    "geburtsdatum": [
+        2118,
+        1,
+        31
+    ],
+    "umsatz": {
+        "betrag": 0,
+        "waehrung": "EUR"
+    },
+    "homepage": "https://www.test.de",
+    "geschlecht": "W",
+    "familienstand": "L",
+    "interessen": [
+        "R",
+        "L"
+    ],
+    "adresse": {
+        "plz": "1234",
+        "ort": "Testort"
+    },
+    "user": {
+        "username": "test",
+        "password": "p"
+    }
+}
+
+### Einen Kunden mittels PUT aktualisieren
+PUT https://localhost:8444/00000000-0000-0000-0000-000000000001
+If-Match: 0
+Content-Type: application/json
+Authorization: Basic YWRtaW46cA
+ALPN: h2
+
+{
+    "nachname": "Testput",
+    "email": "Theo@Test.de.put",
+    "kategorie" : 1,
+    "newsletter": true,
+    "geburtsdatum": [
+        2017,
+        1,
+        31
+    ],
+    "umsatz": {
+        "betrag": 0,
+        "waehrung": "EUR"
+    },
+    "homepage": "https://www.test.de",
+    "geschlecht": "W",
+    "familienstand": "L",
+    "interessen": [
+        "R",
+        "L"
+    ],
+    "adresse": {
+        "plz": "12345",
+        "ort": "Testort"
+    }
+}
+
+### Einen Kunden mittels PATCH aktualisieren
+PATCH https://localhost:8444/00000000-0000-0000-0000-000000000001
+If-Match: 0
+Content-Type: application/json
+Authorization: Basic YWRtaW46cA
+ALPN: h2
+
+[
+    { "op": "replace", "path": "/nachname", "value": "Neuername" },
+    { "op": "replace", "path": "/email", "value": "new.email@test.de" },
+    { "op": "add", "path": "/interessen", "value": "R" },
+    { "op": "remove", "path": "/interessen", "value": "L" }
+]
+
+### Löschen mit vorhandener Kunde-ID
+DELETE https://localhost:8444/00000000-0000-0000-0000-000000000004
+Authorization: Basic YWRtaW46cA
+ALPN: h2
+
+### Löschen mit vorhandener Email
+#DELETE https://localhost:8444/?email=phi@hska.cn
+#Authorization: Basic YWRtaW46cA
+#ALPN: h2
+
+### Suche Nachnamen mit Praefix
+https://localhost:8444/nachname/a
+Authorization: Basic YWRtaW46cA
+ALPN: h2
+
+### Suche Emailadressen mit Praefix
+https://localhost:8444/email/al
+Authorization: Basic YWRtaW46cA
+ALPN: h2
+
+### Suche Version zu Kunde-ID
+https://localhost:8444/version/00000000-0000-0000-0000-000000000001
+Authorization: Basic YWRtaW46cA
+ALPN: h2
+
+# -----------------------------------------------------------------
+# C o n f i g   S e r v e r
+# -----------------------------------------------------------------
+
+### Konfigurationsdaten fuer das Profil "dev"
+http://localhost:8888/kunde/dev/master
+Authorization: Basic YWRtaW46cA
+
+# -----------------------------------------------------------------
+# O P T I O N S, H E A D
+# -----------------------------------------------------------------
+
+#OPTIONS https://localhost:8444
+#Authorization: Basic YWRtaW46cA
+#ALPN: h2
+
+#HEAD https://localhost:8444
+#Authorization: Basic YWRtaW46cA
+#ALPN: h2
+
+# -----------------------------------------------------------------
+# A c t u a t o r
+# -----------------------------------------------------------------
+
+### Uebersicht
+https://localhost:8444/application
+Authorization: Basic YWRtaW46cA
+
+### Status (erforder Client fuer MongoDB)
+#https://localhost:8444/application/status
+#Authorization: Basic YWRtaW46cA
+
+### Status
+https://localhost:8444/application/status
+Authorization: Basic YWRtaW46cA
+
+### Spring Beans
+https://localhost:8444/application/beans
+Authorization: Basic YWRtaW46cA
+
+### Configuration Properties
+https://localhost:8444/application/configprops
+Authorization: Basic YWRtaW46cA
+
+### Autoconfiguration
+https://localhost:8444/application/autoconfig
+Authorization: Basic YWRtaW46cA
+
+### Umgebungsvariable
+https://localhost:8444/application/env
+Authorization: Basic YWRtaW46cA
+
+### Shutdown
+POST https://localhost:8444/application/shutdown
+Authorization: Basic YWRtaW46cA
+Content-Type: application/json

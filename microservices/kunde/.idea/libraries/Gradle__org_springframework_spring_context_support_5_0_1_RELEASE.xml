@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: org.springframework:spring-context-support:5.0.1.RELEASE">
+    <CLASSES>
+      <root url="jar://C:/Z/caches/modules-2/files-2.1/org.springframework/spring-context-support/5.0.1.RELEASE/e051326ac31b553e2b5b151372da26b6ab0b9c6f/spring-context-support-5.0.1.RELEASE.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://C:/Z/caches/modules-2/files-2.1/org.springframework/spring-context-support/5.0.1.RELEASE/658a3fd7ec9d133b7a3e0468db4bad74922e671/spring-context-support-5.0.1.RELEASE-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://C:/Z/caches/modules-2/files-2.1/org.springframework/spring-context-support/5.0.1.RELEASE/f4e3e143745c349bbb3b4540547b29b180bde1df/spring-context-support-5.0.1.RELEASE-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

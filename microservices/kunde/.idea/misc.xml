@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_9" default="true" project-jdk-name="1.9" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/classes" />
+  </component>
+  <component name="ValidationConfiguration">
+    <option name="VALIDATORS">
+      <map>
+        <entry key="EJB Validator" value="false" />
+        <entry key="Faces Validator" value="false" />
+        <entry key="JPA Validator" value="false" />
+        <entry key="Jasper Validator" value="false" />
+        <entry key="Spring Model Validator" value="false" />
+        <entry key="Spring Web Flow" value="false" />
+        <entry key="Web Xml Validator" value="false" />
+      </map>
+    </option>
+  </component>
+</project>

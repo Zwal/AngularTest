@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: com.sun.mail:javax.mail:1.6.0">
+    <CLASSES>
+      <root url="jar://C:/Z/caches/modules-2/files-2.1/com.sun.mail/javax.mail/1.6.0/a055c648842c4954c1f7db7254f45d9ad565e278/javax.mail-1.6.0.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://C:/Z/caches/modules-2/files-2.1/com.sun.mail/javax.mail/1.6.0/7d158973e7acac11e4b485cf2bbb63d3d8870292/javax.mail-1.6.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://C:/Z/caches/modules-2/files-2.1/com.sun.mail/javax.mail/1.6.0/835d0bd1271818612c2d6f33764e1687e8a59a41/javax.mail-1.6.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

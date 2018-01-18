@@ -1,0 +1,137 @@
+/*
+ * Copyright (C) 2016 - 2017 Juergen Zimmermann, Hochschule Karlsruhe
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+//  Aufruf
+//  .\gradlew --build-cache [bootRun]
+
+buildscript {
+    ext.kotlin_version = '1.2.0-rc-39'
+    ext {
+        springBootVersion = '2.0.0.M6'
+        ktlintVersion = '0.12.1'
+    }
+
+    repositories {
+        maven { url 'https://plugins.gradle.org/m2' }
+        maven { url 'http://dl.bintray.com/kotlin/kotlin-eap-1.2' }
+        maven { url 'http://repo.spring.io/milestone' }
+        jcenter()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
+    }
+    configurations.classpath {
+        resolutionStrategy { force "com.github.shyiko:ktlint:$ktlintVersion" }
+    }
+}
+
+plugins {
+    id 'io.spring.dependency-management' version '1.0.3.RELEASE'
+    id 'org.jmailen.kotlinter' version '1.4.0'
+    id 'io.gitlab.arturbosch.detekt' version '1.0.0.RC5-3'
+    id 'idea'
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'kotlin-allopen'
+apply plugin: 'org.springframework.boot'
+
+defaultTasks 'bootRun'
+group = "de.hska"
+version = '1.0'
+archivesBaseName = "$name"
+
+ext['tomcat.version'] = '9.0.1'
+ext['spring-cloud.version'] = 'Finchley.M3'
+ext['spring-boot.version'] = '2.0.0.M6'
+ext {
+    intellijVersion = '2017.3'
+}
+
+repositories {
+    maven { url 'http://dl.bintray.com/kotlin/kotlin-eap-1.2' }
+    maven { url 'http://repo.spring.io/libs-milestone' }
+    maven { url 'http://repo.spring.io/release' }
+    maven { url 'https://plugins.gradle.org/m2' }
+    jcenter()
+}
+
+dependencyManagement {
+    imports { mavenBom "org.springframework.cloud:spring-cloud-dependencies:${project.ext['spring-cloud.version']}" }
+    //imports { mavenBom "org.springframework.boot:spring-boot-dependencies:${project.ext['spring-boot.version']}" }
+}
+
+dependencies {
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version",
+                   "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
+                   "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version",
+
+                   'org.springframework.cloud:spring-cloud-config-server',
+                   'org.springframework.cloud:spring-cloud-starter-config',
+                   'org.springframework.boot:spring-boot-starter-security',
+                   'org.springframework.boot:spring-boot-starter-actuator')
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = '1.8'
+        verbose = true
+        freeCompilerArgs = ['-Xjsr305=strict']
+        //allWarningsAsErrors = true
+    }
+}
+
+sourceSets { main.kotlin.srcDirs += 'src/main/kotlin' }
+
+allOpen {
+    annotation("org.springframework.context.annotation.Configuration")
+}
+
+bootRun {
+}
+
+jar {
+    baseName = "$archivesBaseName"
+    version = null
+    manifest { attributes 'Main-Class': 'de.hska.config.ApplicationKt' }
+}
+
+assemble.doLast {
+    println ''
+    println 'Aufruf der ausfuehrbaren JAR-Datei:'
+    println "java -jar build/libs/${archivesBaseName}-1.0.jar"
+    println ''
+}
+
+detekt {
+    profile('main') {
+        input = "$projectDir/src/main/kotlin"
+    }
+    idea {
+        path = "${System.getenv('USERPROFILE')}/.IntelliJIdea$intellijVersion"
+        inspectionsProfile = "$projectDir/.idea/inspectionProfiles/Project_Default.xml"
+        report = "$buildDir/reports"
+    }
+}
+
+idea {
+    module {
+        downloadJavadoc = true
+    }
+}

@@ -1,0 +1,148 @@
+# Copyright (C) 2016 Juergen Zimmermann, Hochschule Karlsruhe
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# https://logging.apache.org/log4j/2.x/manual/configuration.html
+Configutation:
+    status: warn
+
+    Appenders:
+        Console:
+            name: CONSOLE
+            target: SYSTEM_OUT
+            # https://logging.apache.org/log4j/2.x/manual/layouts.html
+            PatternLayout:
+                Pattern: "%date{HH:mm:ss.SSS} %highlight{%-5level} [%logger{1.}] [%thread] %message%n"
+        # https://logging.apache.org/log4j/2.x/manual/appenders.html#RollingFileAppender
+        RollingFile:
+            -   name: FILE
+                fileName: ./build/logs/application.log
+                filePattern: "./build/logs/microservice-%date{yyyy-MM-dd}-%i.log.gz"
+                PatternLayout:
+                    Pattern: "%date{HH:mm:ss.SSS} %-5level [%logger{1.}] [%thread] %message%n"
+                policies:
+                    TimeBasedTriggeringPolicy:
+                        interval: 1
+                        modulate: true
+                    SizeBasedTriggeringPolicy:
+                        size: "2 MB"
+                DefaultRolloverStrategy:
+                    max: 2
+
+    Loggers:
+        Root:
+            level: info
+            AppenderRef:
+                -   ref: CONSOLE
+                -   ref: FILE
+        Logger:
+            -   name: de.hska
+                additivity: false
+                level: all
+                AppenderRef:
+                    -   ref: CONSOLE
+                        level: info
+                    -   ref: FILE
+#            -   name: org.mongodb
+#                additivity: false
+#                level: trace
+#                AppenderRef:
+#                    -   ref: CONSOLE
+#                        level: info
+#                    -   ref: FILE
+            -   name: org.mongodb.driver.cluster
+                additivity: false
+                level: info
+                AppenderRef:
+                    -   ref: CONSOLE
+                        level: warn
+                    -   ref: FILE
+#            -   name: org.springframework.data
+#                additivity: false
+#                level: trace
+#                AppenderRef:
+#                    -   ref: CONSOLE
+#                        level: info
+#                    -   ref: FILE
+#            -   name: org.springframework.data.mongodb.core.MongoTemplate
+#                additivity: false
+#                level: debug
+#                AppenderRef:
+#                    -   ref: CONSOLE
+#                        level: info
+#                    -   ref: FILE
+            -   name: org.springframework.data.repository.init.ResourceReaderRepositoryPopulator
+                additivity: false
+                level: trace
+                AppenderRef:
+                    -   ref: CONSOLE
+                        level: info
+                    -   ref: FILE
+            -   name: org.apache.kafka.clients.NetworkClient
+                additivity: false
+                level: error
+                AppenderRef:
+                    -   ref: CONSOLE
+                        level: error
+                    -   ref: FILE
+            -   name: org.hibernate.validator.internal.xml.ValidationXmlParser
+                additivity: false
+                level: error
+                AppenderRef:
+                    -   ref: CONSOLE
+                        level: warn
+                    -   ref: FILE
+            -   name: org.hibernate.validator.internal.xml.ValidationBootstrapParameters
+                additivity: false
+                level: error
+                AppenderRef:
+                    -   ref: CONSOLE
+                        level: warn
+                    -   ref: FILE
+            -   name: org.junit.jupiter.engine.descriptor.TestInstanceLifecycleUtils
+                additivity: false
+                level: trace
+                AppenderRef:
+                    -   ref: CONSOLE
+                        level: warn
+                    -   ref: FILE
+            -   name: org.subethamail.smtp.server.ServerThread
+                additivity: false
+                level: info
+                AppenderRef:
+                    -   ref: CONSOLE
+                        level: warn
+                    -   ref: FILE
+            -   name: org.subethamail.smtp.server.SMTPServer
+                additivity: false
+                level: info
+                AppenderRef:
+                    -   ref: CONSOLE
+                        level: warn
+                    -   ref: FILE
+#            -   name: org.springframework.cloud.sleuth
+#                additivity: false
+#                level: debug
+#                AppenderRef:
+#                    -   ref: CONSOLE
+#                        level: info
+#                    -   ref: FILE
+#            -   name: org.hibernate.SQL
+#                additivity: false
+#                level: debug
+#                #level: trace
+#                AppenderRef:
+#                    -   ref: CONSOLE
+#                        level: info
+#                    -   ref: FILE

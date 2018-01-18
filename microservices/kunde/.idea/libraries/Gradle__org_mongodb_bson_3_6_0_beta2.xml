@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: org.mongodb:bson:3.6.0-beta2">
+    <CLASSES>
+      <root url="jar://C:/Z/caches/modules-2/files-2.1/org.mongodb/bson/3.6.0-beta2/92766193a7aab86503271dd9724f8a4120a5cd32/bson-3.6.0-beta2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://C:/Z/caches/modules-2/files-2.1/org.mongodb/bson/3.6.0-beta2/ee057d37a6167c83e9c81604d52a16ea0c0412a5/bson-3.6.0-beta2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://C:/Z/caches/modules-2/files-2.1/org.mongodb/bson/3.6.0-beta2/1b478fa3778b82f0bd56837cce8626eb36f05a99/bson-3.6.0-beta2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

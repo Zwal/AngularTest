@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<!--
+ * Copyright (C) 2015 - 2016 Juergen Zimmermann, Hochschule Karlsruhe
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<!--
+    Neue CSS-Funktionalitaet, wie z.B. CSS Grid Layout:
+    chrome://flags/#enable-experimental-web-platform-features
+-->
+
+<html>
+    <head>
+        <!-- http://de.selfhtml.org/html/kopfdaten/meta.htm -->
+        <!-- http://wiki.selfhtml.org/wiki/HTML/Kopfdaten/meta -->
+        <!-- http://wiki.whatwg.org/wiki/MetaExtensions -->
+        <meta charset="utf-8">
+
+        <!-- Viewport ist der Anzeigebereich im Fenster der Anwendung, der fuer die Darstellung tatsaechlich zur Verfuegung steht. -->
+        <!-- Bei mobilen Geraeten ist der Viewport oft auf eine Breite von 980 Pixeln eingestellt. -->
+        <!-- Deshalb ist eine Website zwar komplett zu sehen, aber die Inhalte sind sehr klein und Schriften nicht lesbar. -->
+        <!-- Anfaenglicher Zoomgrad ist 1.0, so dass die Seite 1:1 dargestellt wird -->
+        <!-- Ggf. zusaetzlich user-scalable=no -->
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <meta http-equiv="cache-control" content="no-cache"/>
+        <!-- https/8443 für Express/Node.js, wss/443 fuer browser-sync -->
+        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'self'; connect-src 'self' http://localhost:8443/ wss://localhost/ wss://localhost:8443/; img-src 'self' data:; style-src 'unsafe-inline' 'self'; font-src 'self'"/>
+        <meta name="author" content="J&uuml;rgen Zimmermann">
+        <meta name="keywords" content="Software Engineering,REST,Angular,Bootstrap,Font Awesome,Chart.js,lodash,Webpack">
+
+        <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+
+        <base href="/">
+        <title>Beispiel</title>
+        <style>
+            html {
+                position: relative;
+                min-height: 100%;
+            }
+        </style>
+        <!-- CSS-Dateien werden von Webpack eingefuegt -->
+    </head>
+
+    <body>
+        <!-- JS-Dateien werden von Webpack eingefuegt -->
+        <hs-app>
+            Entwicklermodus: <i class="fa fa-spin fa-spinner"></i>
+            <span class="ml-1">Bitte warten...</span>
+        </hs-app>
+    </body>
+</html>

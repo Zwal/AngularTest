@@ -1,0 +1,79 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam componentStyle uml2
+
+package reactor.core.publisher {
+    abstract class Mono {
+    }
+
+    abstract class Flux {
+    }
+}
+
+package org.springframework {
+    package data {
+        package repository.reactive {
+            interface ReactiveCrudRepository {
+            }
+        }
+
+        package mongodb.core {
+            class ReactiveMongoTemplate {
+            }
+        }
+    }
+
+    package security.core {
+        interface Authentication {
+        }
+    }
+}
+
+package de.hska.kunde {
+    package config.security {
+        class AuthService << control >> {
+        }
+    }
+
+    package entity {
+        class Kunde << entity >> {
+        }
+    }
+
+    package service #DDDDDD {
+        KundeRepository .down.|> ReactiveCrudRepository
+        KundeService -down-> "1" KundeRepository
+        KundeService -down-> "1" AuthService
+        KundeService -down-> "1" ReactiveMongoTemplate
+        KundeService ..> Kunde
+        KundeService ..> Flux
+        KundeService ..> Mono
+        KundeService ..> Authentication
+
+        interface KundeRepository {
+        }
+
+        class KundeService << control >> << @Service >> << @CacheConfig >> {
+            + findAll(): Flux<Kunde>
+            + @Cacheable(key = "#id") findById(id: String): Mono<Kunde>
+            + find(email: String, nachname: String, plz: String): Flux<Kunde>
+            + find(queryParams: Map<String, String>): Flux<Kunde>
+            + findMedia(id: String): Mono<GridFsResource>
+            + save(kunde: Kunde): Kunde
+            + save(inputStream: InputStream, id: String, contentType: String): Mono<Object>
+            + @CachePut(key = "#kunde.id") update(kunde: Kunde, versionStr: String): Mono<Kunde>
+            + @CacheEvict(key = "#id") delete(id: String, authentication: Authentication): boolean
+        }
+
+        ' [hidden] fuer nicht-existierende Beziehungen als Workaround fuer das Layout
+        KundeRepository -[hidden]-> Flux
+    }
+}
+
+hide empty members
+hide empty methods
+hide empty fields
+
+footer (c) Juergen Zimmermann
+
+@enduml

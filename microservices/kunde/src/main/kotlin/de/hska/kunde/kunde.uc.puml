@@ -1,0 +1,22 @@
+@startuml
+
+left to right direction
+skinparam packageStyle rect
+skinparam componentStyle uml2
+
+actor Gast
+actor Kunde
+actor Admin
+
+rectangle kunde {
+    Gast --> (registrieren)
+    Kunde --> (Kunde suchen)
+    Kunde --> (Kunde aendern)
+    Admin --> (Kunde suchen)
+    Admin --> (Kunde aendern)
+    Admin --> (Kunde loeschen)
+}
+
+footer (c) Juergen Zimmermann
+
+@enduml

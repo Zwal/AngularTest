@@ -1,0 +1,607 @@
+/*
+ * Copyright (C) 2016 - 2017 Juergen Zimmermann, Hochschule Karlsruhe
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+//  Aufrufe
+//  1) Microservice uebersetzen und starten
+//        .\gradlew -t --build-cache
+//        .\gradlew --build-cache compileKotlin
+//        .\gradlew --build-cache compileTestKotlin
+//
+//  2) Microservice als selbstausfuehrendes JAR erstellen und ausfuehren
+//        .\gradlew --build-cache assemble
+//        java -jar build/libs/....jar --spring.profiles.active=dev
+//
+//  3) Tests und QS
+//        .\gradlew --build-cache build
+//        .\gradlew --build-cache test
+//        .\gradlew --build-cache lintKotlin detektCheck
+//        .\gradlew -x junitPlatformTest --build-cache sonarqube
+//
+//  4) Sicherheitsueberpruefung durch OWASP Dependency Check
+//        .\gradlew dependencyCheckAnalyze --build-cache --info
+//        .\gradlew dependencyCheckUpdate --build-cache --info
+//
+//  5) Projektreport erstellen
+//        .\gradlew projectReport
+//        .\gradlew dependencies
+//        .\gradlew dependencies --configuration runtimeOnly
+//        .\gradlew htmlDependencyReport
+//
+//  6) Neue Abhaengigkeiten ueberpruefen
+//        .\gradlew dependencyUpdates
+//        .\gradlew versions
+//
+//  7) Dokumentation erstellen
+//        .\gradlew dokka
+//
+//  8) Verfuegbare Tasks auflisten
+//        .\gradlew tasks
+//
+//  9) Properties auflisten
+//        .\gradlew properties
+//        .\gradlew dependencyManagementProperties
+//
+//  10) Report ueber die Lizenzen der eingesetzten Fremdsoftware
+//        .\gradlew generateLicenseReport
+//
+//  11) Entwicklerhandbuch in "Software Engineering" erstellen
+//        .\gradlew asciidoctor
+//
+//  12) Daemon abfragen und stoppen
+//        .\gradlew --status
+//        .\gradlew --stop
+//
+//  13) Initialisierung des Gradle Wrappers in der richtigen Version
+//      (dazu ist ggf. eine Internetverbindung erforderlich)
+//        gradle wrapper --gradle-version 4.3.1 --distribution-type=all
+
+buildscript {
+    ext.kotlin_version = '1.2.0-rc-39'
+    ext {
+        springBootVersion = '2.0.0.M6'
+        junitPlatformGradlePluginVersion = '1.0.2'
+        ktlintVersion = '0.12.1'
+        asciidoctorjPdfVersion = '1.5.0-alpha.16'
+    }
+
+    repositories {
+        maven { url 'http://dl.bintray.com/kotlin/kotlin-eap-1.2' }
+        maven { url 'http://repo.spring.io/libs-milestone' }
+        //maven { url 'http://repo.spring.io/milestone' }
+        maven { url 'https://plugins.gradle.org/m2' }
+        maven { url 'http://repo.spring.io/plugins-release' }
+        jcenter()
+        //mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath(
+            // fuer Spring Beans
+            "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version",
+            // fuer Spring Data MongoDB
+            "org.jetbrains.kotlin:kotlin-noarg:$kotlin_version",
+            "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion",
+            "org.junit.platform:junit-platform-gradle-plugin:$junitPlatformGradlePluginVersion",
+            //"io.gitlab.arturbosch.detekt:detekt:...",
+            "org.asciidoctor:asciidoctorj-pdf:$asciidoctorjPdfVersion")
+    }
+
+    configurations.classpath {
+        resolutionStrategy { force "com.github.shyiko:ktlint:$ktlintVersion" }
+    }
+}
+
+plugins {
+    id 'idea'
+
+    //id 'org.springframework.boot' version '2.0.0.M6'
+
+    // https://github.com/spring-gradle-plugins/dependency-management-plugin
+    id 'io.spring.dependency-management' version '1.0.3.RELEASE'
+
+    id 'jacoco'
+
+    // http://redirect.sonarsource.com/doc/gradle.html
+    id 'org.sonarqube' version '2.6'
+    // https://github.com/jeremymailen/kotlinter-gradle
+    // https://github.com/shyiko/ktlint
+    // https://github.com/JLLeitschuh/ktlint-gradle
+    id 'org.jmailen.kotlinter' version '1.5.0'
+    // https://github.com/arturbosch/detekt
+    id 'io.gitlab.arturbosch.detekt' version '1.0.0.RC5-4'
+
+    id 'org.jetbrains.dokka' version '0.9.15'
+
+    id 'com.fizzpod.sweeney' version '2.1.2'
+
+    id 'org.owasp.dependencycheck' version '3.0.2'
+
+    //'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.15'
+    id 'org.asciidoctor.convert' version '1.5.6'
+
+    id 'project-report'
+
+    // https://github.com/ben-manes/gradle-versions-plugin
+    id 'com.github.ben-manes.versions' version '0.17.0'
+
+    // https://plugins.gradle.org/plugin/com.github.nwillc.vplugin
+    id 'com.github.nwillc.vplugin' version '2.1.1'
+
+    // https://github.com/intergamma/gradle-zap
+    id 'net.intergamma.gradle.gradle-zap-plugin' version '0.9.6'
+    
+    // https://github.com/jk1/Gradle-License-Report
+    id 'com.github.jk1.dependency-license-report' version '0.4.0'
+
+    // https://github.com/jaredsburrows/gradle-license-plugin
+    //id 'com.jaredsburrows.license' version '0.7.0'
+}
+
+// FIXME https://youtrack.jetbrains.com/issue/KT-14988
+// FIXME https://youtrack.jetbrains.com/issue/KT-18833
+apply plugin: 'kotlin'
+apply plugin: 'kotlin-allopen'
+apply plugin: 'kotlin-noarg'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'org.junit.platform.gradle.plugin'
+
+group = 'de.hska'
+archivesBaseName = "$name"
+version = '1.0'
+
+defaultTasks 'bootRun'
+
+// -------------------------------------------------------------------------------------------
+// Properties aus BOM-Dateien ueberschreiben
+// siehe org.springframework.boot:spring-boot-dependencies
+//    https://github.com/spring-projects/spring-boot/blob/master/spring-boot-dependencies/pom.xml
+// siehe org.springframework.cloud:spring-cloud-dependencies
+//    https://github.com/spring-cloud/spring-cloud-release/blob/master/spring-cloud-dependencies/pom.xml
+// siehe org.springframework.cloud:spring-cloud-build-dependencies
+//    https://github.com/spring-cloud/spring-cloud-build/blob/master/spring-cloud-build-dependencies/pom.xml
+// siehe org.springframework.cloud:spring-cloud-netflix-dependencies
+//    https://github.com/spring-cloud/spring-cloud-netflix/blob/master/spring-cloud-netflix-dependencies/pom.xml
+// siehe org.springframework.cloud:spring-cloud-build
+//    https://github.com/spring-cloud/spring-cloud-build/blob/master/spring-cloud-build/pom.xml
+// -------------------------------------------------------------------------------------------
+//https://www.eclipse.org/aspectj/doc/released/README-190.html
+ext['aspectj.version'] = '1.9.0.RC2'
+//ext['assertj.version'] = '3.8.0'
+//ext['hazelcast.version'] = '3.9'
+//ext['hibernate-validator.version'] = '6.0.4.Final'
+//ext['jackson.version'] = '2.9.2'
+//ext['javax-mail.version'] = '1.6.0'
+//ext['javax-validation.version'] = '2.0.0.Final'
+//ext['log4j2.version'] = '2.9.1'
+ext['mongo-driver-reactivestreams.version'] = '1.7.0-beta1'
+ext['mongodb.version'] = '3.6.0-beta2'
+//ext['reactor-bom.version'] = 'Bismuth-SR3'
+//ext['spring.version'] = '5.0.1.RELEASE'
+//ext['spring-data-releasetrain.version'] = 'Kay-SR1'
+//ext['spring-security.version'] = '5.0.0.CR1'
+//ext['spring-security-jwt.version'] = '1.0.8.RELEASE'
+//ext['spring-security-oauth.version'] = '2.2.0.RELEASE'
+// spring-security-jwt-jose -> spring-security-oauth2-jose
+// Tomcat kann nicht PKCS#12
+ext['undertow.version'] = '1.4.21.Final'
+
+ext['spring-cloud.version'] = 'Finchley.M3'
+ext['spring-boot.version'] = '2.0.0.M6'
+ext['eureka.version'] = '1.8.5'
+//ext['feign.version'] = '9.5.1'
+//ext['hystrix.version'] = '1.5.12'
+ext['ribbon.version'] = '2.2.4'
+
+ext {
+    // Spring IO Platform: Spring Framework, Spring Boot, Spring Data, Spring Security, Spring Security OAuth
+    //springPlatformBomVersion = 'Brussels-SR4'
+    jaxbRuntimeVersion = '2.3.0'
+    activationVersion = '1.1.1'
+    paranamerVersion = '2.8'
+
+    junitJupiterVersion = '5.0.2'
+    junitPlatformVersion = '1.0.2'
+    jacocoVersion = '0.7.9'
+    intellijVersion = '2017.3'
+
+    asciidoctorjVersion = '1.6.0-alpha.6'
+    antVersion = '1.10.1'
+
+    owaspAutoupdate = false
+
+    plantumlVersion = '1.2017.19'
+}
+
+configurations {
+    plantuml
+
+    depCheck
+
+    implementation.exclude module: 'spring-webmvc'
+    implementation.exclude module: 'spring-boot-starter-tomcat'
+    implementation.exclude module: 'spring-boot-starter-logging'
+
+    // spring-test mit MockMvc wie auch mit JUnit 4 benoetigt hamcrest-core
+    testImplementation.exclude module: 'hamcrest-core'
+    testImplementation.exclude module: 'hamcrest-library'
+    testImplementation.exclude module: 'json-path'
+    testImplementation.exclude module: 'jsonassert'
+}
+
+repositories {
+    maven { url 'http://dl.bintray.com/kotlin/kotlin-eap-1.2' }
+    //maven { url 'http://dl.bintray.com/kotlin/kotlin-eap-1.1' }
+
+    // https://github.com/spring-projects/spring-framework/wiki/Spring-repository-FAQ
+    maven { url 'http://repo.spring.io/libs-milestone' }
+    maven { url 'http://repo.spring.io/release' }
+    // maven { url 'http://repo.spring.io/libs-staging-local' }
+
+    jcenter()
+    //mavenCentral()
+}
+
+dependencyManagement {
+    imports { mavenBom "org.springframework.cloud:spring-cloud-dependencies:${project.ext['spring-cloud.version']}" }
+
+    //https://github.com/spring-cloud/spring-cloud-release/blob/master/docs/src/main/asciidoc/spring-cloud-starters.adoc#using-spring-cloud-dependencies-with-spring-io-platform
+    //imports { mavenBom "io.projectreactor:reactor-bom:${project.ext['reactor-bom.version']}" }
+    //imports { mavenBom "org.springframework.boot:spring-boot-dependencies:${project.ext['spring-boot.version']}" }
+    //imports { mavenBom "org.springframework.data:spring-data-releasetrain:${project.ext['spring-data.version']}" }
+    //imports { mavenBom "org.springframework.security:spring-security-bom:${project.ext['spring-security.version']}" }
+    //imports { mavenBom "io.spring.platform:platform-bom:..." }
+}
+
+dependencies {
+    // fuer META-INF/additional-spring-configuration-metadata
+    // optional 'org.springframework.boot:spring-boot-configuration-processor'
+
+    implementation(
+        "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version",
+        "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
+        "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version",
+        // https://github.com/spring-projects/spring-boot/tree/master/spring-boot-starters
+        // http://docs.spring.io/spring-boot/docs/current/reference/html/howto-logging.html
+        'org.springframework.boot:spring-boot-starter-log4j2',
+        'org.springframework.boot:spring-boot-starter-json',
+        // fuer log4j2.yml
+        'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml',
+        "com.thoughtworks.paranamer:paranamer:$paranamerVersion",
+        'org.springframework.boot:spring-boot-starter-aop',
+        'com.hazelcast:hazelcast-spring',
+
+        'org.springframework.cloud:spring-cloud-starter-config',
+        'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client',
+        'org.springframework.cloud:spring-cloud-starter-netflix-hystrix',
+        'org.springframework.cloud:spring-cloud-starter-openfeign',
+        //'org.springframework.cloud:spring-cloud-starter-oauth2',
+
+        'io.projectreactor.kafka:reactor-kafka',
+        'org.synchronoss.cloud:nio-multipart-parser',
+        // CAVEAT: Falls spring-boot-starter-web als Dependency enthalten ist, wird Spring MVC konfiguriert,
+        // damit in MVC-Anwendungen der "reactive" WebClient nutzbar ist
+        // spring-boot-starter-webflux: Reactor Netty als Default "Web Engine"
+        'org.springframework.boot:spring-boot-starter-webflux',
+        //"org.jboss.xnio:xnio-nio:...",
+        'org.springframework.boot:spring-boot-starter-undertow',
+        'org.springframework.boot:spring-boot-starter-data-mongodb-reactive',
+        'org.springframework.boot:spring-boot-starter-security',
+        'org.springframework.boot:spring-boot-starter-mail',
+        'org.springframework.boot:spring-boot-starter-cache')
+
+    compileOnly('org.springframework.boot:spring-boot-configuration-processor')
+        // Index-Datei META-INF/spring.components fuer 500+ Klassen statt Scanning des Classpath
+        // https://github.com/dsyer/spring-boot-startup-bench#spring-50-component-index
+        //'org.springframework:spring-context-indexer'
+
+    runtime(
+        // FIXME Spring Cloud Netflix (Hystrix) funktioniert noch nicht mit Spring Boot Actuator
+        // https://github.com/spring-cloud/spring-cloud-netflix/issues/2438
+        //'org.springframework.boot:spring-boot-starter-actuator',
+        'org.springframework.boot:spring-boot-starter-web',
+        'org.springframework.boot:spring-boot-devtools',
+        // com.netflix.eureka:eureka-client -> com.sun.jersey:jersey-core -> javax.xml.bind.JAXBContext
+        "org.glassfish.jaxb:jaxb-runtime:$jaxbRuntimeVersion",
+        "javax.activation:activation:$activationVersion")
+
+    testImplementation(
+        "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion",
+        'org.springframework.boot:spring-boot-starter-test',
+        'org.springframework.security:spring-security-test')
+
+    testRuntimeOnly(
+        "org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion",
+        "org.junit.platform:junit-platform-launcher:$junitPlatformVersion",
+        // sonst CNFE: org.apache.logging.log4j.jul.LogManager
+        'org.apache.logging.log4j:log4j-jul')
+
+    plantuml(
+        "net.sourceforge.plantuml:plantuml:$plantumlVersion",
+        "org.apache.ant:ant-junit:$antVersion")
+
+    // Warning bei SonarQube. Sonst wird aber der Classpath fuer Gradle zu lang
+    // http://stackoverflow.com/questions/34143530/sonar-maven-analysis-class-not-found#answer-34151150
+    // implementation 'org.springframework.security:spring-security-ldap'
+    // implementation "org.openid4java:openid4java:$openid4javaVersion"
+    // implementation 'org.springframework.security:spring-security-openid'
+}
+
+allOpen {
+    annotation("org.springframework.stereotype.Component")
+}
+
+noArg {
+    annotation("org.springframework.data.mongodb.core.mapping.Document")
+}
+
+//noinspection GroovyUnusedAssignment
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+//https://github.com/boxheed/gradle-sweeney-plugin
+sweeney {
+    enforce type: 'gradle', expect: '[4.1,)'
+    //noinspection GroovyAssignabilityCheck
+    validate()
+}
+
+sourceSets { main.kotlin.srcDirs += 'src/main/kotlin' }
+
+afterEvaluate {
+    def junitPlatformTestTask = tasks.getByName('junitPlatformTest')
+
+    // configure jacoco to analyze the junitPlatformTest task
+    jacoco {
+        toolVersion = "$jacocoVersion"
+        //noinspection GroovyAssignabilityCheck
+        applyTo junitPlatformTestTask
+    }
+
+    // Die Task 'junitPlatformJacocoReport' wird erstellt
+    // http://stackoverflow.com/questions/39362955/gradle-jacoco-and-junit5
+    def junitPlatformJacocoReport = project.task(type: JacocoReport, 'junitPlatformJacocoReport', {
+        sourceDirectories = files('./src/main')
+        classDirectories = files("$buildDir/classes/kotlin/main")
+        // https://issues.gradle.org/browse/GRADLE-2955
+        // https://stackoverflow.com/questions/29887805/filter-jacoco-coverage-reports-with-gradle
+        classDirectories = files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                'de/hska/**/entity',
+                'de/hska/**/config/**',
+                'de/hska/**/util'
+            ])
+        })
+        executionData junitPlatformTestTask
+    })
+    test.dependsOn(junitPlatformJacocoReport)
+
+    //def sonarqubeTask = tasks.getByName('sonarqube')
+    //sonarqubeTask.systemProperty 'sonar.host.url', 'http://localhost:9000'
+}
+
+// https://kotlinlang.org/docs/reference/using-gradle.html
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "$targetCompatibility"
+        javaParameters = true
+        verbose = true
+        freeCompilerArgs = ["-Xjsr305=strict"]
+        // ggf. wegen Kotlin-Daemon: %TEMP%\kotlin-daemon.* und %LOCALAPPDATA%\kotlin\daemon
+        // https://youtrack.jetbrains.com/issue/KT-18300
+        //  $env:LOCALAPPDATA\kotlin\daemon
+        //  $env:TEMP\kotlin-daemon.<ZEITSTEMPEL>
+        //warningsAsErrors = true
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "$targetCompatibility"
+        verbose = true
+        freeCompilerArgs = ['-Xjsr305=strict']
+        //warningsAsErrors = true
+    }
+}
+
+bootRun {
+    // Profile "dev" wird ueber SystemProperties gesetzt (s. gradle.properties)
+    jvmArgs += ['-Dspring.profiles.active=dev']
+
+    // Remote Debugger:   gradle bootRun --debug-jvm
+    //jvmArgs '-verbose:class'
+    //jvmArgs '-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005'
+}
+
+// http://docs.spring.io/spring-boot/docs/current/reference/html/build-tool-plugins-gradle-plugin.html
+bootJar {
+    baseName = "$archivesBaseName"
+    //noinspection GrReassignedInClosureLocalVar
+    version = null
+}
+bootJar.doLast {
+    println ''
+    println 'Aufruf der ausfuehrbaren JAR-Datei:'
+    println "java -jar build/libs/${archivesBaseName}.jar --spring.profiles.active=dev"
+    println ''
+}
+
+// Tests mit JUnit 5
+junitPlatform {
+    platformVersion "$junitPlatformVersion"
+    filters {
+        engines {
+            include 'junit-jupiter'
+        }
+
+        tags {
+            include 'rest' //, 'service'
+        }
+        includeClassNamePattern "$includeTests"
+    }
+    // reportsDir file('build/test-results/junit-platform')
+
+    // System-Property java.util.logging.manager wird gesetzt fuer log4j2
+    logManager 'org.apache.logging.log4j.jul.LogManager'
+}
+
+// Docker erfordert, dass bei Windows 10 Hyper-V aktiviert ist.
+// Dann funktioniert aber der Emulator von Android Studio nicht mehr.
+task docker(type: Exec) {
+    dependsOn assemble
+
+    executable = 'docker'
+    args = ['build', '-t', "$name", '.']
+    // commandLine 'docker.exe', 'build', '-t', "$name", '.'
+}
+
+task junitPlatformMkdirs {
+    doLast {
+        def resultsDir = new File(buildDir, '/test-results/junit-platform')
+        resultsDir.mkdirs()
+    }
+}
+
+// http://stackoverflow.com/questions/34143530/sonar-maven-analysis-class-not-found#answer-34151150
+sonarqube {
+    //noinspection GroovyAssignabilityCheck
+    properties {
+        // property 'sonar.tests', 'src/test/kotlin'
+        // property 'sonar.exclusions', 'src/test/resources/truststore.p12'
+        property 'sonar.scm.disabled', true
+        //property 'sonar.java.coveragePlugin', 'jacoco'
+        // https://docs.sonarqube.org/display/PLUG/Code+Coverage+by+Unit+Tests+for+Java+Project
+        //property 'sonar.jacoco.reportPaths', jacocoExtension.destinationFile
+        //property 'sonar.junit.reportsPaths', testTask.reports.junitXml.destination
+    }
+}
+
+detekt {
+    // version = "$detektVersion"
+    profile('main') {
+        input = "$projectDir/src/main/kotlin"
+        config = "$projectDir/config/detekt.yml"
+        output = "$buildDir/reports/detekt"
+        // filters = '.*/config/.*'
+    }
+    idea {
+        path = "${System.getenv('USERPROFILE')}/.IntelliJIdea$intellijVersion"
+        //codeStyleScheme = "$projectDir/config/code-style.xml"
+        inspectionsProfile = "$projectDir/.idea/inspectionProfiles/Project_Default.xml"
+        report = "$buildDir/reports"
+    }
+}
+
+// https://github.com/jeremylong/DependencyCheck/blob/master/src/site/markdown/dependency-check-gradle/configuration.md
+// https://github.com/jeremylong/DependencyCheck/issues/360
+dependencyCheck {
+    //noinspection GroovyAccessibility
+    suppressionFile = "$projectDir/config/owasp.xml"
+    data {
+        directory = 'C:/Zimmermann/owasp-dependency-check'
+        username = 'dc'
+        password = 'p'
+    }
+    //noinspection GroovyAccessibility
+    format = 'ALL'
+}
+
+// http://randomthoughtsonjavaprogramming.blogspot.de/2012/02/plantuml-and-netbeans.html
+task plantuml {
+    doLast {
+        ant.taskdef(name: 'plantuml',
+                    classname: 'net.sourceforge.plantuml.ant.PlantUmlTask',
+                    classpath: configurations.plantuml.asPath)
+
+        ant.mkdir(dir: "$buildDir/docs/images")
+        ant.plantuml(output: "$buildDir/docs/images",
+                     // graphvizDot: 'C:\\Zimmermann\\Graphviz\\bin\\dot.exe',
+                     verbose: true) {
+            fileset(dir: "$projectDir/src/main/kotlin") {
+                include(name: '**/*.puml')
+            }
+        }
+
+        // PNG-Bilder kopieren fuer PDF-Generierung bei AsciiDoctor
+        ant.mkdir(dir: "$projectDir/src/main/images")
+        ant.copy(todir: "$projectDir/src/main/images") {
+            fileset(dir: "$buildDir/docs/images") {
+                include(name: '*.png')
+            }
+        }
+
+        // Font Icons fuer AsciiDoctor kopieren
+        // ant.mkdir(dir: "$buildDir/docs/icons")
+        // ant.copy(todir: "$buildDir/docs/icons") {
+        //     fileset(dir: "$projectDir/src/main/resources/docs/icons") {
+        //         include(name: '*')
+        //     }
+        // }
+    }
+}
+
+dokka {
+    outputFormat = 'html' 
+    outputDirectory = "$buildDir/javadoc"
+}
+
+// https://www.mynethome.de/2016/11/16/asciidoctor-gradle-separate-tasks-for-pdf-and-html-output
+asciidoctorj {
+    version = "$asciidoctorjVersion"
+}
+asciidoctor {
+    sourceDir 'config/docs'
+    outputDir "${buildDir}/docs/asciidoc"
+    backends = ['html5']
+    // backends = ['html5', 'pdf']
+    logDocuments true
+    //noinspection GroovyAssignabilityCheck
+    attributes 'source-higlighter': 'coderay',
+               'coderay-linenums-mode': 'table',
+               toc: 'left',
+               // icon: 'font',
+               linkattrs: true,
+               encoding: 'utf-8'
+    // fuer PDF (noch im Alpha-Stadium!): imagesdir relativ zu sourceDir.
+    // Dann funktioniert aber die Referenzierung der Bilder in HTML nicht mehr :-(
+    // https://github.com/asciidoctor/asciidoctor-pdf/issues/271
+    // https://github.com/asciidoctor/asciidoctor-epub3/issues/22
+    // attributes imagesdir: "../../../build/docs/images"
+
+    doLast {
+        println 'Das Entwicklerhandbuch ist in build/docs/asciidoc/html5/entwicklerhandbuch.html'
+    }
+}
+asciidoctor.dependsOn plantuml
+
+// http://mrhaki.blogspot.de/2016/05/grails-goodness-change-version-for.html
+// http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-customize-dependency-versions
+task dependencyManagementProperties {
+    doLast {
+        // Properties sortieren und auf der Konsole ausgeben
+        dependencyManagement.importedProperties
+                .toSorted()
+                .each { property -> println property }
+    }
+}
+
+// Aufruf:   gradlew cleanIdea idea
+// https://docs.gradle.org/current/dsl/org.gradle.plugins.ide.idea.model.IdeaModule.html
+idea {
+    module {
+        // downloadSources = true
+        downloadJavadoc = true
+    }
+}

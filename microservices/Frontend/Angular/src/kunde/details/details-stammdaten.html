@@ -1,0 +1,69 @@
+<!--
+   Copyright (C) 2015 - 2017 Juergen Zimmermann, Hochschule Karlsruhe
+
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<table class="table table-striped table-hover table-responsive"
+        *ngIf="kunde !== undefined">
+    <tbody>
+        <tr>
+            <td><label>Nachname</label></td>
+            <td>{{kunde.nachname}}</td>
+        </tr>
+        <tr>
+            <td><label>Umsatz</label></td>
+            <td>{{kunde.umsatz.betrag}}{{kunde.umsatz.waehrung}}</td>
+        </tr>
+        <tr>
+            <td><label>Familienstand</label></td>
+            <td>
+                <span [ngSwitch]="kunde.familienstand">
+                    <span *ngSwitchCase="'L'">Ledig</span>
+                    <span *ngSwitchCase="'VH'">Verheiratet</span>
+                    <span *ngSwitchCase="'G'">Getrennt</span>
+                    <span *ngSwitchCase="'VW'">Verwitwet</span>
+                    <span *ngSwitchDefault>unbekannt</span>
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <td><label>Geschlecht</label></td>
+            <td>
+                <span [ngSwitch]="kunde.geschlecht">
+                    <span *ngSwitchCase="'M'">Maennlich</span>
+                    <span *ngSwitchCase="'W'">Weiblich</span>
+                    <span *ngSwitchDefault>unbekannt</span>
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <td><label>Account</label></td>
+            <!-- TODO 2 Nachkommastellen. Pipe "| number: '.2'" -->
+            <td>{{kunde.username}}</td>
+        </tr>
+        <tr>
+            <td><label>Email</label></td>
+            <td>{{kunde.email}}</td>
+        </tr>
+        <tr>
+            <td><label>Newsletter?</label></td>
+            <td>
+                <div class="checkbox">
+                    <input type="checkbox" checked="{{kunde.newsletter}}" disabled
+                        class="checkbox">
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>

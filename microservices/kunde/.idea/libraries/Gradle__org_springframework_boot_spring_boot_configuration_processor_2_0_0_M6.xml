@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: org.springframework.boot:spring-boot-configuration-processor:2.0.0.M6">
+    <CLASSES>
+      <root url="jar://C:/Z/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-configuration-processor/2.0.0.M6/87ae28f88fa8242aa3c7d342eb0900286ca47bfc/spring-boot-configuration-processor-2.0.0.M6.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://C:/Z/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-configuration-processor/2.0.0.M6/ce5bab4fa477959afb4d619f7f536b5fa253df67/spring-boot-configuration-processor-2.0.0.M6-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://C:/Z/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-configuration-processor/2.0.0.M6/cff44a8219dccfde792c946042a298159c66cfe6/spring-boot-configuration-processor-2.0.0.M6-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: io.projectreactor.kafka:reactor-kafka:1.0.0.RELEASE">
+    <CLASSES>
+      <root url="jar://C:/Z/caches/modules-2/files-2.1/io.projectreactor.kafka/reactor-kafka/1.0.0.RELEASE/421c25f5bbf69fab7a9e4c7d915eb0f012baaabb/reactor-kafka-1.0.0.RELEASE.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://C:/Z/caches/modules-2/files-2.1/io.projectreactor.kafka/reactor-kafka/1.0.0.RELEASE/cb90d95e95233194554df5dedfc0cff0478fbdef/reactor-kafka-1.0.0.RELEASE-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://C:/Z/caches/modules-2/files-2.1/io.projectreactor.kafka/reactor-kafka/1.0.0.RELEASE/b6b5fe2a09fb23335cdc89c2473b673421afc779/reactor-kafka-1.0.0.RELEASE-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,134 @@
+<!--
+   Copyright (C) 2015 - 2017 Juergen Zimmermann, Hochschule Karlsruhe
+
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<!-- Template Binding durch die Direktive ngIf -->
+<!-- Eine Direktive ist eine Komponente ohne View -->
+
+<div *ngIf="waiting; else suchergebnis">
+    <hs-waiting></hs-waiting>
+</div>
+
+<ng-template #suchergebnis>
+    <div *ngIf="buecher.length === 0; else gefundeneBuecher">
+        <!-- Achtung: zu Beginn gibt es noch keine Buecher -->
+        <hs-error-message [text]="errorMsg"></hs-error-message>
+    </div>
+
+    <ng-template #gefundeneBuecher>
+        <div class="card mt-2" *ngIf="buecher.length !== 0; else fehlermeldung">
+            <div class="card-header">
+                <i class="fa fa-folder-open-o"></i>
+                <span class="ml-1 font-weight-bold">Gefundene B&uuml;cher</span>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped table-hover table-responsive"
+                        [@easeIn]="'in'">
+                    <thead class="thead-default">
+                        <tr>
+                            <th>Nr.</th>
+                            <th>ID</th>
+                            <th>Titel</th>
+                            <th>Verlag</th>
+                            <th>Schlagw&ouml;rter</th>
+                            <th>
+                                <span class="sr-only">
+                                    Spalte f&uuml;r Details
+                                </span>
+                            </th>
+                            <th *ngIf="isAdmin">
+                                <span class="sr-only">
+                                    Spalte f&uuml;r Entfernen
+                                </span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Template Binding: ngFor -->
+                        <!-- Event-Binding: statt (click) auch on-click -->
+                        <!-- Animation flyInOut siehe unten -->
+                        <tr *ngFor="let b of buecher; index as i"
+                            (click)="onSelect(b)" [@easeOut]="'in'">
+                            <td>{{ i + 1 }}</td>
+                            <td>{{ b._id }}</td>
+                            <td>{{ b.titel }}</td>
+                            <td>
+                                <span [ngSwitch]="b.verlag">
+                                    <span *ngSwitchCase="'IWI_VERLAG'">Iwi Verlag</span>
+                                    <span *ngSwitchCase="'HSKA_VERLAG'">
+                                        Hska Verlag
+                                    </span>
+                                    <span *ngSwitchDefault>unbekannt</span>
+                                </span>
+                            </td>
+                            <td>
+                                <span *ngFor="let sw of b.schlagwoerter">
+                                    <span [ngSwitch]="sw">
+                                        <span *ngSwitchCase="'JAVASCRIPT'">
+                                            JavaScript<br>
+                                        </span>
+                                        <span *ngSwitchCase="'TYPESCRIPT'">
+                                            TypeScript
+                                        </span>
+                                    </span>
+                                </span>
+                            </td>
+                            <td>
+                                <!-- Pfad detailsBuch/:id, in routes.ts -->
+                                <!-- modaler Dialog als Alternative: -->
+                                <!-- https://getbootstrap.com/docs/4.0/components/modal -->
+                                <a [routerLink]="['/details', b._id]"
+                                    data-toggle="tooltip" title="Details anzeigen">
+                                    <i class="fa fa-search-plus"></i>
+                                </a>
+                            </td>
+                            <td *ngIf="isAdmin">
+                                <a (click)="onRemove(b)" data-toggle="tooltip"
+                                    title="Entfernen">
+                                    <i class="fa fa-remove"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer">
+                <div [ngPlural]="buecher.length">
+                    <!-- zu vergleichender Ausdruck -->
+                    <ng-template ngPluralCase="=0">
+                        <i class="fa fa-info-circle"></i> Es gibt kein Buch
+                    </ng-template>
+                    <ng-template ngPluralCase="=1">
+                        <i class="fa fa-info-circle"></i> Es gibt ein Buch
+                    </ng-template>
+                    <ng-template ngPluralCase="other">
+                        <i class="fa fa-info-circle"></i>
+                        Es gibt {{ buecher.length }} B&uuml;cher
+                    </ng-template>
+                </div>
+
+                <i class="fa fa-info-circle"></i>
+                Zur Anzeige der JSON-Datens&auml;tze in suchergebnis.html
+                am Dateiende den Kommentar beim Tag &lt;pre&gt; entfernen
+            </div>
+        </div>
+
+        <!-- Ausgabe des JSON-Datensatzes im Webbrowser statt console.log(...) -->
+        <!--
+        <pre>{{buecher | json}}</pre>
+        -->
+    </ng-template>
+</ng-template>

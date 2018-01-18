@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: org.springframework.cloud:spring-cloud-starter-netflix-hystrix:2.0.0.M3">
+    <CLASSES>
+      <root url="jar://C:/Z/caches/modules-2/files-2.1/org.springframework.cloud/spring-cloud-starter-netflix-hystrix/2.0.0.M3/530616f1d53f2378cea22e633a0682744dc9f023/spring-cloud-starter-netflix-hystrix-2.0.0.M3.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://C:/Z/caches/modules-2/files-2.1/org.springframework.cloud/spring-cloud-starter-netflix-hystrix/2.0.0.M3/4f987bd77e412b0d6e3f560ac8a1dae72ebd3132/spring-cloud-starter-netflix-hystrix-2.0.0.M3-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://C:/Z/caches/modules-2/files-2.1/org.springframework.cloud/spring-cloud-starter-netflix-hystrix/2.0.0.M3/f4f3e085d51fba9e9650b7620a9d39fbeb24a720/spring-cloud-starter-netflix-hystrix-2.0.0.M3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
