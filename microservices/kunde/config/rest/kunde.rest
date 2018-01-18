@@ -75,6 +75,7 @@ ALPN: h2
     "adresse": {
         "plz": "12345",
         "ort": "Testort"
+        "strasse": "Teststr. 3"
     },
     "user": {
         "username": "test",
@@ -111,6 +112,7 @@ ALPN: h2
     "adresse": {
         "plz": "1234",
         "ort": "Testort"
+        "strasse": "Teststr. 3"
     },
     "user": {
         "username": "test",
@@ -149,6 +151,7 @@ ALPN: h2
     "adresse": {
         "plz": "12345",
         "ort": "Testort"
+        "strasse": "Teststr. 3"
     }
 }
 

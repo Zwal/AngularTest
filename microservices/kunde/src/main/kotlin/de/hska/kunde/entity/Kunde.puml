@@ -26,6 +26,7 @@ package de.hska.kunde {
         class Adresse {
             - @NotNull @Pattern plz: String
             - @NotNull ort: String
+            - @NotNull strasse: String
         }
 
         enum GeschlechtType {
