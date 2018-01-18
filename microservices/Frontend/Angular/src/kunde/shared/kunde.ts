@@ -249,8 +249,7 @@ export class Kunde {
      * @param geschlecht Das neue Geschlecht
      */
     updateStammdaten(
-        nachname: string, vorname: string, familienstand: familienstandArt, geschlecht: Geschlecht,
-        betrag: number) {
+        nachname: string, vorname: string, familienstand: familienstandArt, geschlecht: Geschlecht) {
         this.nachname = nachname
         this.vorname = vorname
         this.familienstand = familienstand

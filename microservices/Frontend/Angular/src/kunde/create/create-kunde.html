@@ -64,7 +64,7 @@
             <div class="form-group row"
             [class.has-danger]="!vorname.valid && vorname.touched">
            <label for="vornameInput" class="col col-2 form-control-label">
-               Nachname *
+               Vorname *
            </label>
            <div class="col col-5">
                <input id="vornameInput"
@@ -144,33 +144,6 @@
                 </div>
             </div>
 
-            <div class="form-group row"
-                 [class.has-danger]="!umsatz.valid && umsatz.touched">
-                <label for="umsatzInput" class="col col-2 form-control-label">
-                    Umsatz *
-                </label>
-                <div class="col col-3">
-                    <div class="input-group">
-                        <input id="umsatzInput"
-                               required
-                               class="form-control form-control-danger"
-                               type="number"
-                               formControlName="betrag"/>
-                    </div>
-                    <div class="fa fa-exclamation-circle form-control-feedback"
-                         *ngIf="!umsatz.valid && umsatz.touched">
-                        Umsatz darf nicht leer bleiben!
-                    </div>
-                </div>
-                <div class="col col-2">
-                    <select class="form-control form-control-danger"
-                            formControlName="waehrung" required>
-                        <option value="EUR">Euro</option>
-                        <option value="RUB">Rubel</option>
-                    </select>
-                </div>
-            </div>
-
             <div class="form-group row">
                 <label class="col col-2 form-control-label">Familienstand* </label>
                 <div class="col col-5">
@@ -242,6 +215,24 @@
                     <div class="fa fa-exclamation-circle form-control-feedback"
                          *ngIf="!plz.valid && plz.touched">
                         Eine Postleitzahl muss mindestens 5 Zeichen lang sein.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group row"
+                [class.has-danger]="!strasse.valid && strasse.touched">
+                <label for="strasseInput" class="col col-2 form-control-label">
+                    Straße
+                </label>
+                <div class="col col-5">
+                    <input id="strasseInput"
+                            placeholder="Straße"
+                            class="form-control"
+                            autofocus
+                            formControlName="strasse">
+                    <div class="fa fa-exclamation-circle form-control-feedback"
+                            *ngIf="!strasse.valid && strasse.touched">
+                            Eine Straße muss mit einem Buchstaben beginnen und mindestens 2 Zeichen lang sein.
                     </div>
                 </div>
             </div> 

@@ -37,10 +37,9 @@ export default class UpdateStammdatenComponent implements OnInit {
 
     form: FormGroup
     nachname: FormControl
+    vorname: FormControl
     familienstand: FormControl
     geschlecht: FormControl
-    betrag: FormControl
-    waehrung: FormControl
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -64,16 +63,13 @@ export default class UpdateStammdatenComponent implements OnInit {
         ]))
         this.familienstand = new FormControl(this.kunde.familienstand, Validators.required)
         this.geschlecht = new FormControl(this.kunde.geschlecht)
-        this.betrag = new FormControl(this.kunde.umsatz.betrag)
-        this.waehrung = new FormControl(this.kunde.umsatz.waehrung)
 
         this.form = this.formBuilder.group({
             // siehe formControlName innerhalb von @Component({template: ...})
             nachname: this.nachname,
+            vorname: this.vorname,
             geschlecht: this.geschlecht,
             familienstand: this.familienstand,
-            betrag: this.betrag,
-            waehrung: this.waehrung,
         })
     }
 
@@ -97,8 +93,7 @@ export default class UpdateStammdatenComponent implements OnInit {
 
         // rating, preis und rabatt koennen im Formular nicht geaendert werden
         this.kunde.updateStammdaten(
-            this.nachname.value, this.familienstand.value, this.geschlecht.value,
-            this.betrag.value, this.waehrung.value)
+            this.nachname.value, this.vorname.value, this.familienstand.value, this.geschlecht.value)
         console.log('Kunde Stammdaten neu=', this.kunde)
 
         const successFn = () => {
